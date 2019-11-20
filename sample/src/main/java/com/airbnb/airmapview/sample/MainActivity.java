@@ -3,11 +3,11 @@ package com.airbnb.airmapview.sample;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity
   private AirMapView map;
   private DefaultAirMapViewBuilder mapViewBuilder;
   private RecyclerView logsRecyclerView;
+  private View bottomToolsView;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity
 
     mapViewBuilder = new DefaultAirMapViewBuilder(this);
     map = findViewById(R.id.map);
+    bottomToolsView = findViewById(R.id.bottom_tools);
     logsRecyclerView = findViewById(R.id.logs);
     ((LinearLayoutManager) logsRecyclerView.getLayoutManager()).setReverseLayout(true);
     logsRecyclerView.setAdapter(adapter);
@@ -178,6 +180,27 @@ public class MainActivity extends AppCompatActivity
         break;
       case R.id.disable_location:
         map.setMyLocationEnabled(false);
+      case R.id.add_padding:
+        map.setPadding(0, 0, 0, bottomToolsView.getHeight());
+        break;
+      case R.id.center_map: {
+        LatLng wfcLatLng = new LatLng(39.918786, 116.459273);
+        map.setCenter(wfcLatLng);
+        break;
+      }
+      case R.id.animateCenter: {
+        LatLng wfcLatLng = new LatLng(39.918786, 116.459273);
+        map.animateCenter(wfcLatLng);
+        break;
+      }
+      case R.id.zoom:
+        map.setZoom(15);
+        break;
+      case R.id.animateCenterZoom: {
+        LatLng wfcLatLng = new LatLng(39.918786, 116.459273);
+        map.animateCenterZoom(wfcLatLng, 15);
+        break;
+      }
       default:
         break;
     }
@@ -299,8 +322,9 @@ public class MainActivity extends AppCompatActivity
     logsRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
   }
 
-  @Override public void onMapMarkerClick(AirMapMarker<?> airMarker) {
+  @Override public boolean onMapMarkerClick(AirMapMarker<?> airMarker) {
     appendLog("Map onMapMarkerClick triggered with id " + airMarker.getId());
+    return false;
   }
 
   @Override public void onInfoWindowClick(AirMapMarker<?> airMarker) {

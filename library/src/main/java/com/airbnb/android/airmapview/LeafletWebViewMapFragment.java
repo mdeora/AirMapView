@@ -42,4 +42,22 @@ public class LeafletWebViewMapFragment extends WebViewMapFragment {
               marker.getDivIcon().getHeight()));
     }
   }
+
+  @Override
+  public void setCenterZoom(LatLng latLng, int zoom) {
+    webView.loadUrl(String.format(Locale.US, "javascript:centerZoomMap(%1$f, %2$f, %3$d);", latLng.latitude,
+            latLng.longitude, zoom));
+  }
+
+  @Override
+  public void animateCenter(LatLng latLng) {
+    webView.loadUrl(String.format(Locale.US, "javascript:animateCenterMap(%1$f, %2$f);", latLng.latitude,
+            latLng.longitude));
+  }
+
+  @Override
+  public void animateCenterZoom(LatLng latLng, int zoom) {
+    webView.loadUrl(String.format(Locale.US, "javascript:animateCenterZoomMap(%1$f, %2$f, %3$d);", latLng.latitude,
+            latLng.longitude, zoom));
+  }
 }
